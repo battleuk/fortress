@@ -3,7 +3,7 @@ name: Deploy Documentation
 on:
   push:
     branches:
-      - maister
+      - master
   workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
@@ -15,24 +15,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js environment
+      # Step 2: Set up pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      # Step 3: Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'pnpm'
 
-      # Step 3: Install pnpm and project dependencies
+      # Step 4: Install pnpm and project dependencies
       - name: Install dependencies
         run: |
           corepack enable pnpm
           pnpm install
 
-      # Step 4: Build the documentation (docs:build)
+      # Step 5: Build the documentation (docs:build)
       - name: Build documentation
         run: pnpm run docs:build
 
-      # Step 5: Deploy to GitHub Pages
+      # Step 6: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
